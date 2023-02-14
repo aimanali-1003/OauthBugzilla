@@ -90,7 +90,7 @@ namespace Oauth.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult Delete(int id)
         {
             var project = pr.GetProjectById(id);
@@ -102,7 +102,7 @@ namespace Oauth.Controllers
         {
             pr.Delete(id);
             pr.Save();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
 
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 
 namespace Oauth.Repository
 {
@@ -72,8 +73,8 @@ namespace Oauth.Repository
 
         public void Delete(int id)
         {
-            var product = db.Projects.Find(id);
-            db.Projects.Remove(product);
+            var project = db.Projects.Find(id);
+            if (project != null) db.Projects.Remove(project);
         }
 
         public void Save()
