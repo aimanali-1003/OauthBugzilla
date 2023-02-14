@@ -12,16 +12,18 @@
     </p>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th></th>
-    </tr>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
 
     @foreach (var item in Model)
     {
@@ -35,14 +37,15 @@
             <td>
                 @if (User.IsInRole("Manager"))
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })
+                   <span class="btn btn-primary bg-white"> @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId })</span>
+                   <span class="btn btn-danger bg-white">
+                       @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })</span>
 
-                }
+                       }
 
-                @Html.ActionLink("Details", "Details", new { id = item.ProjectId })
+            <span class="btn btn-primary bg-white">  @Html.ActionLink("Details", "Details", new { id = item.ProjectId }) </span>
 
-            </td>
+</td>
         </tr>
     }
 

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Oauth.ErrorHandling;
+using System.Web.Security;
 using Oauth.Models;
 
 namespace Oauth.Controllers
@@ -16,6 +18,8 @@ namespace Oauth.Controllers
         private DB db = new DB();
 
         // GET: Users
+        [CustomAuthorize(Roles = "Manager")]
+
         public ActionResult Index()
         {
             var users = db.Users.Include(u => u.Role);
