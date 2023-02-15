@@ -1,134 +1,103 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
+using Oauth.Interfaces;
 using Oauth.Models;
+using Oauth.Repository;
 
 namespace Oauth.Controllers
 {
     public class BugsController : Controller
     {
-        private DB db = new DB();
+        private readonly BugRepository _repository = new BugRepository();
 
-        // GET: Bugs
         public ActionResult Index()
         {
-            var bugs = db.Bugs.Include(b => b.project).Include(b => b.user);
-            return View(bugs.ToList());
+            var bugs = _repository.GetData();
+            return View(bugs);
         }
 
-        // GET: Bugs/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
+            if (id <= 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Bug bug = db.Bugs.Find(id);
-            if (bug == null)
-            {
-                return HttpNotFound();
-            }
+
+            var bug = _repository.Search(id);
             return View(bug);
         }
 
-        // GET: Bugs/Create
         public ActionResult Create()
         {
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "Title");
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Name");
+            ViewBag.UserNames = _repository.GetUserNames();
+            ViewBag.ProjectNames = _repository.GetProjectNames();
             return View();
         }
 
-        // POST: Bugs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "BugId,title,status,type,deadline,UserId,ProjectId")] Bug bug)
+        public ActionResult Create(Bug bug)
         {
             if (ModelState.IsValid)
             {
-                db.Bugs.Add(bug);
-                db.SaveChanges();
+                // Get the selected user ID from the form
+              
+
+                // Add the new bug to the database
+                _repository.AddNewRecord(bug);
+                _repository.Save();
+
+                // Redirect to the index action of the Bugs controller
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "Title", bug.ProjectId);
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Name", bug.UserId);
+            // If the model state is not valid, redisplay the create view with the same bug object
+            //ViewBag.AssignedToId = new SelectList(_repository.GetUserNames(), "Value", "Text", bug.AssignedToId);
             return View(bug);
         }
 
-        // GET: Bugs/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Bug bug = db.Bugs.Find(id);
-            if (bug == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "Title", bug.ProjectId);
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Name", bug.UserId);
+            var bug = _repository.GetBugById(id);
             return View(bug);
         }
 
-        // POST: Bugs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "BugId,title,status,type,deadline,UserId,ProjectId")] Bug bug)
+        public ActionResult Edit(int id, Bug bug)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(bug).State = EntityState.Modified;
-                db.SaveChanges();
+                _repository.EditRecord(bug);
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "Title", bug.ProjectId);
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "Name", bug.UserId);
-            return View(bug);
+            catch
+            {
+                return View();
+            }
         }
 
-        // GET: Bugs/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Bug bug = db.Bugs.Find(id);
-            if (bug == null)
-            {
-                return HttpNotFound();
-            }
+            var bug = _repository.GetBugById(id);
             return View(bug);
         }
 
-        // POST: Bugs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Bug bug = db.Bugs.Find(id);
-            db.Bugs.Remove(bug);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            _repository.Delete(id);
+            _repository.Save();
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

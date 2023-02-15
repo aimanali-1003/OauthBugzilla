@@ -11,7 +11,7 @@ using Oauth.Repository;
 
 namespace Oauth.Controllers
 {
-    
+
     [Authorize]
     public class ProjectsController : Controller
     {
@@ -22,6 +22,7 @@ namespace Oauth.Controllers
         }
 
         // GET: Projects/Details/5
+
         public ActionResult Details(int id)
         { 
             if (id == null)

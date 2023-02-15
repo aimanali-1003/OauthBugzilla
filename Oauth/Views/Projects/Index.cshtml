@@ -37,16 +37,19 @@
             <td>
                 @if (User.IsInRole("Manager"))
                 {
-                   <span class="btn btn-primary bg-white"> @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId })</span>
-                   <span class="btn btn-danger bg-white">
-                       @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })</span>
+                    <span class="btn btn-primary bg-white"> @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId })</span>
+                    <span class="btn btn-danger bg-white">@Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })</span>
+                }
 
-                       }
+                <span class="btn btn-primary bg-white">  @Html.ActionLink("Details", "Details", new { id = item.ProjectId }) </span>
 
-            <span class="btn btn-primary bg-white">  @Html.ActionLink("Details", "Details", new { id = item.ProjectId }) </span>
+                @if (User.IsInRole("Manager"))
+                {
+                <td><span class="btn btn-primary bg-white">@Html.ActionLink("Assign User", "Create", "UserProjects")</span></td>
+            }
 
-</td>
-        </tr>
+                </td>
+            </tr>
     }
 
 </table>
