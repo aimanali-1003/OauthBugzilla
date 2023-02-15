@@ -6,20 +6,21 @@ using System.Web;
 
 namespace Oauth.Interfaces
 {
-    interface IProjectRepository
+    public interface IBugRepository
     {
-        Project GetProjectById(int id);
+        Bug GetBugById(int id);
         //display
-        IEnumerable<Project> getdata();
+        IEnumerable<Bug> GetData();
         //insert
-        void Addnewrecord(Project project);//project data goes from view model
+        void AddNewRecord(Bug bug);//project data goes from view model
 
         //update
-        void EditRecord(Project project);
+        void EditRecord(Bug bug);
 
         //delete
         void Delete(int id);
         //search
+
         void Save();
     }
 }
