@@ -41,41 +41,47 @@ namespace Oauth.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Get the selected user ID from the form
-              
-
-                // Add the new bug to the database
                 _repository.AddNewRecord(bug);
                 _repository.Save();
 
-                // Redirect to the index action of the Bugs controller
                 return RedirectToAction("Index");
             }
-
-            // If the model state is not valid, redisplay the create view with the same bug object
-            //ViewBag.AssignedToId = new SelectList(_repository.GetUserNames(), "Value", "Text", bug.AssignedToId);
             return View(bug);
         }
 
         public ActionResult Edit(int id)
         {
-            var bug = _repository.GetBugById(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Bug bug = _repository.GetBugById(id);
+            if (bug == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.UserNames = _repository.GetUserNames();
+            ViewBag.ProjectNames = _repository.GetProjectNames();
+
             return View(bug);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Bug bug)
+
+        public ActionResult Edit(Bug bug)
         {
-            try
+            if (ModelState.IsValid)
             {
                 _repository.EditRecord(bug);
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+            ViewBag.UserNames = _repository.GetUserNames();
+            ViewBag.ProjectNames = _repository.GetProjectNames();
+            return View(bug);
         }
 
         public ActionResult Delete(int id)
