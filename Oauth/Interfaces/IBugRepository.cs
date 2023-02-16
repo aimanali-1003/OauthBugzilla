@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Oauth.Interfaces
 {
@@ -21,6 +22,11 @@ namespace Oauth.Interfaces
         void Delete(int id);
         //search
 
+       IEnumerable<SelectListItem> GetUserNames();
+
+        IEnumerable<SelectListItem> GetProjectNames();
+
         void Save();
+        void Dispose();
     }
 }

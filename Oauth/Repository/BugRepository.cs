@@ -72,30 +72,6 @@ namespace Oauth.Repository
                 .ToList();
             return projects;
         }
-
-        //public User GetUserById(int id)
-        //{
-        //    return db.Users.FirstOrDefault(u => u.UserId == id);
-        //}
-        //public List<string> GetUserNames()
-        //{
-        //    var userNames = db.Users.Select(u => u.Name).ToList();
-        //    return userNames;
-        //}
-
-        //public List<string> GetUserNamesByIds(List<int> userIds)
-        //{
-        //    return db.Users
-        //        .Where(u => userIds.Contains(u.UserId))
-        //        .Select(u => u.Name)
-        //        .ToList();
-        //}
-
-        //public IEnumerable<User> GetUsers()
-        //{
-        //    return db.Users.ToList();
-        //}
-
         public List<int> GetProjectIds()
         {
             return db.Projects.Select(u => u.ProjectId).ToList();
